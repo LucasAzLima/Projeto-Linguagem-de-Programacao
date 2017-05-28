@@ -84,6 +84,47 @@ void inserirAluno(int idAluno)
     exec(sql);
 }
 
+void deletarTurma(char ID[])
+{
+    char frase[150]="DELETE from TURMAS where ID=";
+    strcat(frase,ID);
+
+    sql=(char *)strcat(frase,"; \nSELECT * from TURMAS ORDER BY ID DESC");
+    exec(sql);
+}
+void deletarAluno(char ID[])
+{
+    char frase[150]="DELETE from ALUNOS where ID=";
+    strcat(frase,ID);
+    sql=(char *)strcat(frase,"; \nSELECT * from ALUNOS ORDER BY ID DESC");
+    exec(sql);
+}
+
+void AtualizarAluno(char nota[], char valornota[], char Id[])
+{
+
+    char frase[30]="UPDATE ALUNOS set NOTA" ;
+    strcat(frase,nota);
+    strcat(frase,"= ");
+    strcat(frase,valornota);
+    char frase2[10]=" where ID=";
+    char frase3[20]="; \n SELECT * from ALUNOS";
+    strcat(frase,frase2);
+    sql=(char*)strcat(frase,frase3);
+    exec(sql);
+}
+void AtualizarTurma(char Id[], char QuantidadeAluno[])
+{
+    char frase[30]="UPDATE TURMAS set QUANTALUNOS=";
+    char frase2[10]=" where ID=";
+    strcat(frase,QuantidadeAluno);
+    strcat(frase,frase2);
+    strcat(frase,Id);
+    char frase3[20]="; \n SELECT * from TURMAS";
+    sql=(char*) strcat(frase,frase3);
+    exec(sql);
+}
+
 void inserirTurma(char DISCIPLINA[], char QUANTALUNOS[],int idTurma)
 {
     idTurma++;
@@ -268,10 +309,13 @@ int main()
     exec(sql);
 
 
-    inserirAluno(idAlunos);
-
-    inserirTurma("Logica", "100",idTurma);
-
+    //inserirAluno(idAlunos);
+     //AtualizarAluno(nota, valornota,id);
+    // AtualizarTurma(id,quantidade);
+   // deletarAluno(id);
+   // deletarTurma(id);
+    //inserirTurma("Logica", "100",idTurma);
+    //deletarTurma("1");
     exec(sql);
 
     quantidadeTurmas=1;
