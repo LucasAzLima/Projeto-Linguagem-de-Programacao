@@ -4,24 +4,38 @@
 #include <sqlite3.h>
 #include <stdio.h>
 
-//A SENHA INICIAL É 123
+//A SENHA INICIAL Ã‰ 123
 
 using namespace std;
 
 sqlite3 *db;
 char *zErrMsg = 0;
-int idbanco1=0,idbanco2=0;
-char *sql, *sql2;
 int rc;
+char *sql;
+
+void connect(const char *db_file)
+{
+    rc = sqlite3_open(db_file, &db);
+
+    if( rc )
+    {
+        fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+        return;
+    }
+    else
+    {
+        fprintf(stderr, "Opened database successfully\n");
+    }
+}
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
     int i;
     for(i=0; i<argc; i++)
     {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+        cout<<azColName[i]<< argv[i]<<endl;
     }
-    printf("\n");
+    cout<<endl;
     return 0;
 }
 
@@ -39,47 +53,16 @@ void exec(char *sql)
         fprintf(stdout, "Instruction executed successfully\n");
     }
 }
-void criaBanco()
+void inserirAluno(int idAluno)
 {
-    sqlite3_open("test.db", &db);
-
-    sql = (char *)"CREATE TABLE IF NOT EXISTS TURMAS("\
-          "ID INT PRIMARY KEY     NOT NULL,"\
-          "DISCIPLINA           TEXT    NOT NULL,"\
-          "QUANTALUNOS            INT     NOT NULL);";
-
-    sql2 = (char *)"CREATE TABLE IF NOT EXISTS ALUNOS("  \
-           "ID INT PRIMARY KEY     NOT NULL," \
-           "IDTURMA        INT     NOT NULL,"\
-           "NOME           TEXT    NOT NULL," \
-           "IDADE          INT     NOT NULL," \
-           "MATRICULA      INT     NOT NULL," \
-           "EMAIL          TEXT," \
-           "NOTA1          REAL     NOT NULL,"\
-           "NOTA2          REAL     NOT NULL,"\
-           "NOTA3          REAL     NOT NULL,"\
-           "MEDIA          REAL     NOT NULL);";
-}
-
-void inserirTurma(char *DISCIPLINA,int QUANTALUNOS)
-{
-    idbanco1++;
-
-    sql = (char *) "INSERT INTO TURMAS(ID,DISCIPLINA,QUANTALUNOS) "  \
-          "VALUES (1, 'Paul', 32, 'California', 20000.00 ); ";
-}
-void inserirAluno()
-{
-    char *IDTURMA=(char *)"1",*NOME=(char *)"lucas",*IDADE=(char *)"20",*MATRICULA=(char *)"2016014950";
-    char *EMAIL=(char *)"Lucas",*NOTA1=(char *)"10",*NOTA2=(char *)"10",*NOTA3=(char *)"10",*MEDIA=(char *)"10";
-
-
-    idbanco2++;
-    char prt1[290];
-    //char *prt1 = (char *) "INSERT INTO ALUNOS(ID,IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA)\nVALUES (";
-    sprintf(prt1,"INSERT INTO ALUNOS(ID,IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA) \n VALUES (", idbanco2);
- //   strcat(prt1,idbanco2);
-
+    idAluno++;
+    char idt[3];
+    sprintf(idt,"%d",idAluno);
+    char IDTURMA[2]="1",NOME[30]="lucas",IDADE[3]="20",MATRICULA[11]="2016014950";
+    char EMAIL[30]="Lucas",NOTA1[5]="10",NOTA2[5]="10",NOTA3[5]="10",MEDIA[5]="10";
+    char prt1[200]="INSERT INTO ALUNOS(ID,IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA)\nVALUES (";
+    strcat(prt1,idt);
+    strcat(prt1,",");
     strcat(prt1,IDTURMA);
     strcat(prt1,",'");
     strcat(prt1,NOME);
@@ -97,11 +80,25 @@ void inserirAluno()
     strcat(prt1,NOTA3);
     strcat(prt1,",");
     strcat(prt1,MEDIA);
-    strcat(prt1,");");
-    cout<<prt1;
-    sql2 = (char *)prt1;
+    sql = (char *)strcat(prt1,");");
+    exec(sql);
 }
 
+void inserirTurma(char DISCIPLINA[], char QUANTALUNOS[],int idTurma)
+{
+    idTurma++;
+    char idt[3];
+
+    char prt1[200]="INSERT INTO TURMAS(ID,DISCIPLINA,QUANTALUNOS)\nVALUES(";
+    sprintf(idt,"%d",idTurma);
+    strcat(prt1,idt);
+    strcat(prt1,",'");
+    strcat(prt1,DISCIPLINA);
+    strcat(prt1,"',");
+    strcat(prt1,QUANTALUNOS);
+    sql = (char *)strcat(prt1,");");
+    exec(sql);
+}
 struct Estudante
 {
 
@@ -144,7 +141,7 @@ void senhaAcesso()
     {
         system("cls");
 
-        cout<< "Senha inválida. Tente novamente:";
+        cout<< "Senha invÃ¡lida. Tente novamente:";
         cin.getline(senha,11);
     }
 
@@ -244,31 +241,38 @@ int main()
     int opcaoEntrada, opcaoPrincipal;
     int quantidadeTurmas, numeroTurma;
     int opcaoGerenciamento;
+    int idTurma=0,idAlunos=0;
 
-    criaBanco();
-    inserirAluno();
-    //sql = (char *) "INSERT INTO COMPANY(ID,NAME,AGE,ADDRESS,SALARY) "  \
-    "VALUES (1, 'Paul', 32, 'California', 20000.00 ); "\
-    "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) "  \
-    "VALUES (2, 'Allen', 25, 'Texas', 15000.00 ); "     \
-    "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
-    "VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );" \
-    "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
-    "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
+    connect("test.db");
 
-    //sql = (char *) "SELECT name, salary from COMPANY";
 
-    //sql = (char *) "UPDATE TURMAS set SALARY = 45000.00 where ID=1; " \
-    "SELECT * from TURMAS";
 
-    //sql = (char *) "DELETE from TURMAS where ID=2; " \
-    "SELECT * from TURMAS ORDER BY ID DESC";
+    sql = (char *)"CREATE TABLE IF NOT EXISTS TURMAS("\
+          "ID INT PRIMARY KEY     NOT NULL,"\
+          "DISCIPLINA           TEXT    NOT NULL,"\
+          "QUANTALUNOS            INT     NOT NULL);";
 
     exec(sql);
-    exec(sql2);
 
-    sqlite3_close(db);
+    sql = (char *)"CREATE TABLE IF NOT EXISTS ALUNOS("  \
+          "ID INT PRIMARY KEY     NOT NULL," \
+          "IDTURMA        INT     NOT NULL,"\
+          "NOME           TEXT    NOT NULL," \
+          "IDADE          INT     NOT NULL," \
+          "MATRICULA      INT     NOT NULL," \
+          "EMAIL          CHAR(100)," \
+          "NOTA1          REAL     NOT NULL,"\
+          "NOTA2          REAL     NOT NULL,"\
+          "NOTA3          REAL     NOT NULL,"\
+          "MEDIA          REAL     NOT NULL);";
+    exec(sql);
 
+
+    inserirAluno(idAlunos);
+
+    inserirTurma("Logica", "100",idTurma);
+
+    exec(sql);
 
     quantidadeTurmas=1;
 
