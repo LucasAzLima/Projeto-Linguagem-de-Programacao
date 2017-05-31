@@ -127,97 +127,63 @@ void senhaAcesso()
 
 }
 
-void inserirAluno(int idAluno)
+/*void inserirAluno()
 {
     idAluno++;
     char idt[3];
-    sprintf(idt,"%d",idAluno);
-    char IDTURMA[2]="1",NOME[30]="lucas",IDADE[3]="20",MATRICULA[11]="2016014950";
-    char EMAIL[30]="Lucas",NOTA1[5]="10",NOTA2[5]="10",NOTA3[5]="10",MEDIA[5]="10";
-    char prt1[200]="INSERT INTO ALUNOS(ID,IDTURMA,NOME,IDADE,MATRICULA,EMAIL)\nVALUES (";
-    strcat(prt1,idt);
-    strcat(prt1,",");
-    strcat(prt1,IDTURMA);
-    strcat(prt1,",'");
-    strcat(prt1,NOME);
-    strcat(prt1,"',");
-    strcat(prt1,IDADE);
-    strcat(prt1,",");
-    strcat(prt1,MATRICULA);
-    strcat(prt1,",'");
-    strcat(prt1,EMAIL);
-    sql = (char *)strcat(prt1,"',0,0,0,0);");
+    sprintf(idt,"%d");
+    int IDTURMA; char NOME[30]="lucas";int IDADE,MATRICULA[11];
+    char EMAIL[30]="Lucas",int NOTA1,NOTA2,NOTA3;float MEDIA;
+   // char prt1[200]="INSERT INTO ALUNOS(ID,IDTURMA,NOME,IDADE,MATRICULA,EMAIL)\nVALUES (";
+    char prt1[200];
+ sprintf(prt1,"INSERT INTO ALUNOS(IDTURMA,NOME,IDADE,MATRICULA,EMAIL)\nVALUES (%d,'%s',%d,%d,'%s');",IDTURMA,NOME,IDADE,MATRICULA,EMAIL);
 
+    sql = (char *)prt1
     exec(sql);
-}
+}*/
 
 void deletarTurma(int ID)
 {
-
-    char id[3];
-    sprintf(id,"%d",ID);
-    char frase[150]="DELETE from TURMAS where ID=";
-    strcat(frase,id);
-
-    sql=(char *)strcat(frase,";");
+    char frase[150];
+    sprintf(frase,"DELETE from TURMAS where ID=%d;",ID);
+    sql=(char *)frase;
     exec(sql);
 
-    char frase2[150]="DELETE from ALUNOS where IDTURMA=";
-    strcat(frase2,id);
-
-    sql=(char *)strcat(frase2,";");
+    sprintf(frase,"DELETE from TURMAS where ID=%d;",ID);
+    sql=(char *)frase;
     exec(sql);
 }
-void deletarAluno(char ID[])
+void deletarAluno(int ID)
 {
-    char frase[150]="DELETE from ALUNOS where ID=";
-    strcat(frase,ID);
-    sql=(char *)strcat(frase,";");
+    char frase[50];
+    sprintf(frase,"DELETE from ALUNOS where ID=%d;",ID);
+
+    sql=(char *)frase;
     exec(sql);
 }
 
-void AtualizarAluno(char nota[], char valornota[], char Id[])
+void AtualizarAluno(int nota, int valornota, int Id)
 {
-
-
-    char frase[30]="UPDATE ALUNOS set NOTA" ;
-    strcat(frase,"= ");
-    strcat(frase,valornota);
-    char frase2[20]=" where ID=";
-    strcat(frase,Id);
-    strcat(frase,frase2);
-    char frase3[25]="; \n SELECT * from ALUNOS";
-    sql=(char*)strcat(frase,frase3);
+    char frase[30];
+    sprintf(frase,"UPDATE ALUNOS set NOTA%d=%d  where ID=%d; \n SELECT * from ALUNOS",nota,valornota,Id);
+    sql=(char*)frase;
     exec(sql);
 }
-void AtualizarTurma(char Id[], char QuantidadeAluno[])
+void AtualizarTurma(int Id, int QuantidadeAluno)
 {
-    char frase[31]="UPDATE TURMAS set QUANTALUNOS=";
-    char frase2[11]=" where ID=";
-    strcat(frase,QuantidadeAluno);
-    strcat(frase,frase2);
-    strcat(frase,Id);
-    char frase3[26]="; \n SELECT * from TURMAS";
-    sql=(char*) strcat(frase,frase3);
+    char frase[31];
+    sprintf(frase,"UPDATE TURMAS set QUANTALUNOS=%d where ID=%d; \n SELECT * from TURMAS", QuantidadeAluno,Id);
+    sql=(char*)frase;
     exec(sql);
 }
 
 void inserirTurma(char DISCIPLINA[], int QUANTALUNOS,int idTurma)
 {
     idTurma++;
-    char idt[3], qa[4];
+    char frase[200];
+    sprintf(frase,"INSERT INTO TURMAS(DISCIPLINA,NUMERO,QUANTALUNOS)\nVALUES('%s',%d,%d);",DISCIPLINA,QUANTALUNOS,idTurma);
 
-    char prt1[200]="INSERT INTO TURMAS(DISCIPLINA,NUMERO,QUANTALUNOS)\nVALUES(";
-    strcat(prt1,"'");
-    strcat(prt1,DISCIPLINA);
-    strcat(prt1,"',");
-    sprintf(idt,"%d",idTurma);
-    strcat(prt1,idt);
-    strcat(prt1,",");
-    sprintf(qa,"%d",QUANTALUNOS);
-    strcat(prt1,qa);
-    sql = (char *)strcat(prt1,");");
-    cout<<sql;
+    sql = (char *)frase;
     exec(sql);
 }
 //Menu
@@ -238,6 +204,7 @@ void telaGerenciamento()
     int opcaoGerenciamento;
 
     system("cls");
+
 
     cout<<"AS OPCOES DESSE MENU AINDA ESTAO EM DESENVOLVIMENTO (Digite 6 para voltar) "<<endl<<endl
         <<"1-Adicionar turmas                                                         "<<endl
@@ -346,10 +313,6 @@ int main()
     criarTabelaBanco();
 
 
-//sql = (char*) "INSERT INTO TURMAS (DISCIPLINA,QUANTALUNOS)"\
-"VALUES ('LINGUAGEM',100);";
-
-   // exec(sql);
 
     menuEntrada();
 
