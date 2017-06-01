@@ -127,20 +127,40 @@ void senhaAcesso()
 
 }
 
-/*void inserirAluno()
+void inserirAluno()
 {
-    idAluno++;
-    char idt[3];
-    sprintf(idt,"%d");
-    int IDTURMA; char NOME[30]="lucas";int IDADE,MATRICULA[11];
-    char EMAIL[30]="Lucas",int NOTA1,NOTA2,NOTA3;float MEDIA;
-   // char prt1[200]="INSERT INTO ALUNOS(ID,IDTURMA,NOME,IDADE,MATRICULA,EMAIL)\nVALUES (";
-    char prt1[200];
- sprintf(prt1,"INSERT INTO ALUNOS(IDTURMA,NOME,IDADE,MATRICULA,EMAIL)\nVALUES (%d,'%s',%d,%d,'%s');",IDTURMA,NOME,IDADE,MATRICULA,EMAIL);
+    system("cls");
+    char *sql;
 
-    sql = (char *)prt1
+    sql = (char *) "SELECT disciplina, id from TURMAS";
     exec(sql);
-}*/
+    cout<<"Em qual turma deseja adcionar? ";
+
+    int IDTURMA;
+    char NOME[30];
+    int IDADE,MATRICULA;
+    char EMAIL[30];
+    float NOTA1=0,NOTA2=0,NOTA3=0;
+    float MEDIA=0.0;
+    char FRASE[200];
+
+    cin>>IDTURMA;
+    cout<<"Nome do Aluno(a)? ";
+    cin.ignore();
+    cin.getline(NOME,30);
+    cout<<"Idade? ";
+    cin>>IDADE;
+    cout<<"Matricula? ";
+    cin>>MATRICULA;
+    cout<<"Email do Aluno(a)? ";
+    cin.ignore();
+    cin.getline(EMAIL,30);
+
+    sprintf(FRASE,"INSERT INTO ALUNOS(IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA)\nVALUES (%d,'%s',%d,%d,'%s',%d,%d,%d,%f);",IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA);
+    sql = (char *)FRASE;
+    exec(sql);
+
+}
 
 void deletarTurma(int ID)
 {
@@ -149,14 +169,23 @@ void deletarTurma(int ID)
     sql=(char *)frase;
     exec(sql);
 
-    sprintf(frase,"DELETE from TURMAS where ID=%d;",ID);
+    sprintf(frase,"DELETE from ALUNOS where IDTURMA=%d;",ID);
     sql=(char *)frase;
     exec(sql);
 }
-void deletarAluno(int ID)
+void deletarAluno()
 {
+    int id;
+    system("cls");
+    char *sql;
+
+    sql = (char *) "SELECT disciplina, id from TURMAS";
+    exec(sql);
+
+    cout<<"Em qual turma deseja remover o aluno? ";
+    cin>>id;
     char frase[50];
-    sprintf(frase,"DELETE from ALUNOS where ID=%d;",ID);
+    sprintf(frase,"DELETE from ALUNOS where IDTURMA=%d;",id);
 
     sql=(char *)frase;
     exec(sql);
@@ -177,11 +206,10 @@ void AtualizarTurma(int Id, int QuantidadeAluno)
     exec(sql);
 }
 
-void inserirTurma(char DISCIPLINA[], int QUANTALUNOS,int idTurma)
+void inserirTurma(char DISCIPLINA[], int QUANTALUNOS,int Numero)
 {
-    idTurma++;
     char frase[200];
-    sprintf(frase,"INSERT INTO TURMAS(DISCIPLINA,NUMERO,QUANTALUNOS)\nVALUES('%s',%d,%d);",DISCIPLINA,QUANTALUNOS,idTurma);
+    sprintf(frase,"INSERT INTO TURMAS(DISCIPLINA,NUMERO,QUANTALUNOS)\nVALUES('%s',%d,%d);",DISCIPLINA,Numero,QUANTALUNOS);
 
     sql = (char *)frase;
     exec(sql);
@@ -196,9 +224,18 @@ void telaTurmas()
     sql = (char *) "SELECT disciplina, id, quantalunos from TURMAS";
     exec(sql);
 }
+void buscaAluno()
+{
+    char *sql;
+
+    system("cls");
+
+    sql = (char *) "SELECT disciplina, id, quantalunos from TURMAS";
+    exec(sql);
+}
 
 //Menu
-void telaGerenciamento()
+int telaGerenciamento()
 {
 
     int opcaoGerenciamento;
@@ -215,34 +252,15 @@ void telaGerenciamento()
         <<"6-Voltar                                                                   "<<endl;
 
     cin>>opcaoGerenciamento;
-    switch(opcaoGerenciamento)
-    {
-    case 1:
-        char turma[20];
-        int quantidade;
-        cin.ignore();
-        cin.getline(turma,20);
-        cin>>quantidade;
-        inserirTurma(turma,quantidade,idTurma);
-        system("pause");
-        break;
-
-    case 2:
-        telaTurmas();
-        cout<<"Qual quer apagar"<<endl;
-        int turmadel;
-        cin>>turmadel;
-        deletarTurma(turmadel);
-        break;
-    }
+    return opcaoGerenciamento;
 
 
 }
 
 //Menu
-void menuPrincipal()
+int menuPrincipal()
 {
-
+    system("cls");
     char opcaoPrincipal;
 
     cout<<"1- Acessar turmas                          "<<endl
@@ -252,69 +270,116 @@ void menuPrincipal()
 
     cin>> opcaoPrincipal;
 
-    switch(opcaoPrincipal)
-    {
 
-    case '1':
-
-
-        telaTurmas();
-
-        break;
-    case '2':
-        telaGerenciamento();
-        break;
-    case '3':
-
-        break;
-    case '4':
-        break;
-    }
-
+    return opcaoPrincipal;
 }
 
 //Menu
-void menuEntrada()
+void ControledeFluxo()
 {
 
-    char opcaoEntrada;
+    int opcaoEntrada;
 
 backEntrada:
+    system("cls");
 
     cout<<"           SEGT         "<<endl
         <<"                        "<<endl
         <<"    1- Entrar no Sistema"<<endl
-        <<"    2- Sair             "<<endl;
+        <<"    2- Sair             "<<endl
+        <<" Escolha uma das opções:"<<endl;
 
     cin>>opcaoEntrada;
 
     switch(opcaoEntrada)
     {
-    case '1':
-        system("cls");
 
-        senhaAcesso();
+    case 1:
 
-        menuPrincipal();
+menuPrincipal:
 
-    case '2':
+///////////////CODIGO DO MENU PRINCIPAL///////////////
+        switch(menuPrincipal())
+        {
+
+        case '1':
+            telaTurmas();
+            system("pause");
+            goto menuPrincipal;
+            break;
+
+        case '2':
+///////////CODIGO DO GERENCIAR TURMAS /////////////
+            switch(telaGerenciamento())
+            {
+            case 1:
+                char turma[20];
+                int quantidade;
+                cin.ignore();
+                cin.getline(turma,20);
+                cin>>quantidade;
+                inserirTurma(turma,quantidade,idTurma);
+                system("pause");
+                break;
+
+            case 2:
+                telaTurmas();
+                cout<<"Qual quer apagar"<<endl;
+                int turmadel;
+                cin>>turmadel;
+                deletarTurma(turmadel);
+                break;
+            case 3:
+                inserirAluno();
+
+                break;
+
+            case 4:
+                deletarAluno();
+                break;
+            case 5:
+                // AtualizarAluno();
+                break;
+            case 6:
+                goto menuPrincipal;
+                break;
+            default:
+                // goto refresh;
+                break;
+            }
+
+/////////// CODIGO DO GERENCIAR TURMAS /////////////
+            break;
+        case '3':
+
+            break;
+        case '4':
+            break;
+        default:
+            goto menuPrincipal;
+///////////////CODIGO DO MENU PRINCIPAL///////////////
+
+        }
+           break;
+    case 2:
         break;
-
     default:
-        system("cls");
         goto backEntrada;
+        break;
     }
+
 }
 
 int main()
 {
+    setlocale(LC_ALL, "Portuguese");
     connect("test.db");
 
     criarTabelaBanco();
 
 
 
-    menuEntrada();
+    ControledeFluxo();
 
     return 0;
 }
