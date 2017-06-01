@@ -71,6 +71,33 @@ bool stringIgual(char s1[], char s2[])
 
     return true;
 }
+void criarTabelaBanco()
+{
+    char *sql;
+    sql = (char *)"CREATE TABLE IF NOT EXISTS TURMAS("\
+          "ID INTEGER PRIMARY KEY     AUTOINCREMENT,"\
+          "DISCIPLINA           TEXT    NOT NULL,"\
+          "NUMERO               INT     NOT NULL,"\
+          "QUANTALUNOS            INT     NOT NULL);";
+
+    exec(sql);
+
+    sql = (char *)"CREATE TABLE IF NOT EXISTS ALUNOS("  \
+          "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
+          "IDTURMA        INT     NOT NULL,"\
+          "NOME           TEXT    NOT NULL," \
+          "IDADE          INT     NOT NULL," \
+          "MATRICULA      INT     NOT NULL," \
+          "EMAIL          CHAR(100)," \
+          "NOTA1          REAL     NOT NULL,"\
+          "NOTA2          REAL     NOT NULL,"\
+          "NOTA3          REAL     NOT NULL,"\
+          "MEDIA          REAL     NOT NULL);";
+    exec(sql);
+
+}
+void menuEntrada();
+void menuPrincipal();
 
 // Função com senha para acessar o programa
 void senhaAcesso()
@@ -303,6 +330,8 @@ void telaTurmas()
     cin>>ID;
 
     telaAlunoGeral(ID);
+    system("pause");
+    menuPrincipal();
 }
 
 //Menu
@@ -354,13 +383,19 @@ void telaGerenciamento()
             atualizarNotas();
 
         break;
+
+        case '6':
+            menuPrincipal();
+            break;
+        default:
+            menuPrincipal();
+            break;
     }
 }
-
 //Menu
 void menuPrincipal()
 {
-
+system("cls");
     char opcaoPrincipal;
 
 backPrincipal:
@@ -392,7 +427,7 @@ backPrincipal:
         break;
 
     case '4':
-
+     menuEntrada();
         break;
 
     default:
@@ -406,10 +441,11 @@ backPrincipal:
 //Menu
 void menuEntrada()
 {
+    system("cls");
 
     char opcaoEntrada;
 
-backEntrada:
+
 
     cout<<"           SEGT         "<<endl
         <<"                        "<<endl
@@ -432,60 +468,17 @@ backEntrada:
 
     default:
         system("cls");
-        goto backEntrada;
+       menuEntrada();
     }
 }
+
+
 
 int main()
 {
     connect("test.db");
 
-    char *sql;
-
-    sql = (char *)"CREATE TABLE IF NOT EXISTS TURMAS("\
-          "ID INTEGER PRIMARY KEY     AUTOINCREMENT,"\
-          "DISCIPLINA           TEXT    NOT NULL,"\
-          "NUMERO               INT     NOT NULL,"\
-          "QUANTALUNOS            INT     NOT NULL);";
-
-    exec(sql);
-
-    sql = (char *)"CREATE TABLE IF NOT EXISTS ALUNOS("  \
-          "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
-          "IDTURMA        INT     NOT NULL,"\
-          "NOME           TEXT    NOT NULL," \
-          "IDADE          INT     NOT NULL," \
-          "MATRICULA      INT     NOT NULL," \
-          "EMAIL          CHAR(100)," \
-          "NOTA1          REAL     NOT NULL,"\
-          "NOTA2          REAL     NOT NULL,"\
-          "NOTA3          REAL     NOT NULL,"\
-          "MEDIA          REAL     NOT NULL);";
-    exec(sql);
-
-    //sql = (char *) "INSERT INTO TURMAS (DISCIPLINA, NUMERO, QUANTALUNOS) "  \
-          "VALUES ('Linguagem de Programacao',1,100); ";
-
-    //sql = (char *) "DELETE from TURMAS where ID=3; ";
-
-
-    //exec(sql);
-
-    char IDTURMA[2]="2",NOME[30]="Jose",IDADE[3]="18",MATRICULA[11]="2016011170";
-    char EMAIL[30]="italo.of@email.com";
-    char prt1[200]="INSERT INTO ALUNOS(IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA)\nVALUES (";
-    strcat(prt1,IDTURMA);
-    strcat(prt1,",'");
-    strcat(prt1,NOME);
-    strcat(prt1,"',");
-    strcat(prt1,IDADE);
-    strcat(prt1,",");
-    strcat(prt1,MATRICULA);
-    strcat(prt1,",'");
-    strcat(prt1,EMAIL);
-    sql = (char *)strcat(prt1,"',0,0,0,0);");
-
- //   exec(sql);
+    criarTabelaBanco();
 
     menuEntrada();
 
