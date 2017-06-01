@@ -122,8 +122,7 @@ void senhaAcesso()
         cout<< "Senha inválida. Tente novamente:";
         cin.getline(senha,11);
     }
-
-    system("cls");
+f    system("cls");
 
 }
 
@@ -156,7 +155,7 @@ void inserirAluno()
     cin.ignore();
     cin.getline(EMAIL,30);
 
-    sprintf(FRASE,"INSERT INTO ALUNOS(IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA)\nVALUES (%d,'%s',%d,%d,'%s',%d,%d,%d,%f);",IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA);
+    sprintf(FRASE,"INSERT INTO ALUNOS(IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA)\nVALUES (%d,'%s',%d,%d,'%s',%f,%f,%f,%f);",IDTURMA,NOME,IDADE,MATRICULA,EMAIL,NOTA1,NOTA2,NOTA3,MEDIA);
     sql = (char *)FRASE;
     exec(sql);
 
